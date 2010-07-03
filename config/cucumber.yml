@@ -1,0 +1,10 @@
+<%
+rerun = File.file?('rerun.txt') ? IO.read('rerun.txt') : ""
+rerun_opts = rerun.to_s.strip.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} #{rerun}"
+std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} --strict --tags ~@wip"
+%>
+default: <%= std_opts %> features -r features/support/env.rb -r features/support/paths.rb -r features/support/mocha.rb -r features/step_definitions
+wip: --tags @wip:3 --wip features
+rerun: <%= rerun_opts %> --format rerun --out rerun.txt --strict --tags ~@wip
+
+sleeve: --format pretty --strict features/sleeve.feature -r features/support/env.rb -r features/support/schema.rb -r features/sleeve_steps.rb
